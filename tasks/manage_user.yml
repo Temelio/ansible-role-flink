@@ -1,0 +1,18 @@
+---
+
+# Manage user and group
+
+- name: 'INSTALL | Ensure group exists'
+  group:
+    name: "{{ flink_group.name }}"
+    gid: "{{ flink_group.gid | default(omit) }}"
+    system: "{{ flink_group.system | default(omit) }}"
+
+
+- name: 'INSTALL | Ensure user exists'
+  user:
+    name: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    home: "{{ flink_user.home | default(omit) }}"
+    system: "{{ flink_user.system | default(omit) }}"
+    uid: "{{ flink_user.uid | default(omit) }}"

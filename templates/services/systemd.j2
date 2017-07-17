@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description={{ flink_service_description }}
+
+[Service]
+User={{ flink_user.name }}
+Group={{ flink_group.name }}
+WorkingDirectory={{ flink_root_dir.path }}/current
+
+ExecStartPre=/bin/mkdir -p {{ flink_pid_dir.path }}
+ExecStartPre=/bin/chown {{ flink_user.name }}:{{ flink_group.name }} {{ flink_pid_dir.path }}
+ExecStartPre=/bin/chmod {{ flink_pid_dir.mode }} {{ flink_pid_dir.path }}
+
+ExecStart={{ flink_root_dir.path }}/current/bin/start-{{ flink_run_mode }}.sh
+ExecStop={{ flink_root_dir.path }}/current/bin/stop-{{ flink_run_mode }}.sh
+Restart={{ flink_service_systemd.restart }}
+RestartSec={{ flink_service_systemd.restart_sec }}
+
+[Install]
+WantedBy={{flink_service_systemd.wanted_by }}

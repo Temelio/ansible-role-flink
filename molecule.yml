@@ -9,19 +9,18 @@ ansible:
     all: {}
 dependency:
   name: 'galaxy'
+  requirements_file: 'tests/requirements.yml'
 driver:
   name: 'docker'
 docker:
   containers:
-    - name: 'flink-docker-jessie'
-      image: 'debian'
-      image_version: 'jessie'
     - name: 'flink-docker-trusty'
-      image: 'ubuntu'
+      image: 'ubuntu-upstart'
       image_version: 'trusty'
     - name: 'flink-docker-xenial'
-      image: 'ubuntu'
-      image_version: 'xenial'
+      image: 'infopen/ubuntu-xenial-ssh-py27'
+      image_version: '0.2.0'
+      privileged: True
 molecule:
   ignore_paths:
     - '.git'
