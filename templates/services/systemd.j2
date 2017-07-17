@@ -4,6 +4,7 @@
 Description={{ flink_service_description }}
 
 [Service]
+Type=forking
 User={{ flink_user.name }}
 Group={{ flink_group.name }}
 WorkingDirectory={{ flink_root_dir.path }}/current
