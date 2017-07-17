@@ -65,22 +65,13 @@ flink_service_systemd:
 flink_config: "{{ _flink_config }}"
 
 _flink_config:
-  jobmanager:
-    heap:
-      mb: 1024
-    rpc:
-      address: 'localhost'
-      port: 6123
-    web:
-      address: '0.0.0.0'
-      port: 8081
-      submit:
-        enable: False
-  taskmanager:
-    heap:
-      mb: 1024
-    memory:
-      preallocate: False
-    numberOfTaskSlots: 1
-  parallelism:
-    default: 1
+  jobmanager.heap.mb: 1024
+  jobmanager.rpc.address: 'localhost'
+  jobmanager.rpc.port: 6123
+  jobmanager.web.address: '0.0.0.0'
+  jobmanager.web.port: 8081
+  jobmanager.web.submit.enable: False
+  taskmanager.heap.mb: 1024
+  taskmanager.memory.preallocate: False
+  taskmanager.numberOfTaskSlots: 1
+  parallelism.default: 1
