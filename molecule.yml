@@ -7,6 +7,11 @@ ansible:
     ANSIBLE_NOCOWS: 1
   group_vars:
     all: {}
+  host_vars:
+    flink-docker-xenial:
+      openjdk_jre_version: 8
+    flink-vagrant-xenial:
+      openjdk_jre_version: 8
 dependency:
   name: 'galaxy'
   requirements_file: 'tests/requirements.yml'

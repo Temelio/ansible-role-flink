@@ -50,7 +50,10 @@ $ MOLECULE_DRIVER=vagrant tox
 
 ## Dependencies
 
-None
+No dependencies are hardcoded but need a valid Java installation.
+
+For Xenial, use v8. With v9, Flink not start.
+
 
 ## Example Playbook
 
