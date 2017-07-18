@@ -1,5 +1,6 @@
 #!/bin/bash
 # {{ ansible_managed }}
+set -e
 
 ### BEGIN INIT INFO
 # Provides:          {{ flink_service_name }}
@@ -14,11 +15,44 @@
 ### END INIT INFO
 #
 
+# Paths
+FLINK_PID_DIR_PATH={{ flink_pid_dir.path }}
+FLINK_PID_DIR_MODE={{ flink_pid_dir.mode }}
+FLINK_ROOT_DIR_PATH={{ flink_root_dir.path }}
+
+# Flink user and group
+FLINK_USER_NAME={{ flink_user.name }}
+FLINK_GROUP_NAME={{ flink_group.name }}
+
+# Flink mode
+FLINK_RUN_MODE={{ flink_run_mode }}
+
 # Ensure pid dir exists
-/bin/mkdir -p {{ flink_pid_dir.path }}
-/bin/chown {{ flink_user.name }}:{{ flink_group.name }} {{ flink_pid_dir.path }}
-/bin/chmod {{ flink_pid_dir.mode }} {{ flink_pid_dir.path }}
+/bin/mkdir -p "${FLINK_PID_DIR_PATH}"
+/bin/chown "${FLINK_USER_NAME}":"${FLINK_GROUP_NAME}" "${FLINK_PID_DIR_PATH}"
+/bin/chmod "${FLINK_PID_DIR_MODE}" "${FLINK_PID_DIR_PATH}"
 
-test -e {{ flink_root_dir.path }}/current/flink-daemon.sh || exit 1
+# Service management
+case $1 in
+    start|stop)
+        test -e "${FLINK_ROOT_DIR_PATH}/current/bin/$1-${FLINK_RUN_MODE}.sh" || exit 1
+        su -l -c "${FLINK_ROOT_DIR_PATH}/current/bin/$1-${FLINK_RUN_MODE}.sh" "${FLINK_USER_NAME}"
+    ;;
+    restart)
+        test -e "${FLINK_ROOT_DIR_PATH}/current/bin/start-${FLINK_RUN_MODE}.sh" || exit 1
+        test -e "${FLINK_ROOT_DIR_PATH}/current/bin/stop-${FLINK_RUN_MODE}.sh" || exit 1
 
-exec {{ flink_root_dir.path }}/current/bin/flink-daemon.sh $@
+        su -l -c "${FLINK_ROOT_DIR_PATH}/current/bin/stop-${FLINK_RUN_MODE}.sh" "${FLINK_USER_NAME}"
+        su -l -c "${FLINK_ROOT_DIR_PATH}/current/bin/start-${FLINK_RUN_MODE}.sh" "${FLINK_USER_NAME}"
+    ;;
+    status)
+        flink_processes_count=$(ps aux | grep -E '^flink\s+' | wc -l)
+        if [ $flink_processes_count -lt 1 ]; then
+            exit 1
+        else
+            echo 'Flink running'
+            exit 0
+        fi
+    ;;
+esac
+
