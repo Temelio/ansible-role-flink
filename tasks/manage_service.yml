@@ -2,21 +2,6 @@
 
 # Flink service management
 
-- name: 'SERVICE | UPSTART | Manage service configuration file'
-  template:
-    src: "{{ role_path }}/templates/services/upstart.conf.j2"
-    dest: '/etc/init/flink.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  register: 'check_flink_service_upstart_managed'
-  notify:
-    - 'HANDLER | Restart flink'
-  when:
-    - "ansible_distribution | lower == 'ubuntu'"
-    - "ansible_distribution_version == '14.04'"
-
-
 - name: 'SERVICE | INIT.D | Manage service configuration file'
   template:
     src: "{{ role_path }}/templates/services/init.d.j2"
@@ -28,8 +13,7 @@
   notify:
     - 'HANDLER | Restart flink'
   when:
-    - "ansible_distribution | lower == 'debian'"
-    - "ansible_distribution_version == 8"
+    - "ansible_distribution_version in [8,'14.04']"
 
 
 - name: 'SERVICE | SYSTEMD | Manage service configuration file'
@@ -42,7 +26,6 @@
   notify:
     - 'HANDLER | Restart flink'
   when:
-    - "check_flink_service_upstart_managed | skipped"
     - "check_flink_service_initd_managed | skipped"
 
 - name: 'SERVICE | Manage service state'
