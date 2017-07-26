@@ -9,6 +9,8 @@ Install flink package.
 This role requires Ansible 2.0 or higher,
 and platform requirements are listed in the metadata file.
 
+This role need a java installation, but no dependency defined, you can use the role you want (ex: infOpen.openjdk_jre)
+
 ## Testing
 
 This role use [Molecule](https://github.com/metacloud/molecule/) to run tests.
@@ -46,6 +48,87 @@ $ MOLECULE_DRIVER=vagrant tox
 ### Default role variables
 
 ``` yaml
+# Installation variables
+#------------------------------------------------------------------------------
+
+# Package variables
+flink_version: '1.3.1'
+flink_package: "flink-{{ flink_version }}"
+flink_package_filename: "{{ flink_package }}-bin-hadoop2-scala_2.10.tgz"
+flink_download_url: "http://archive.apache.org/dist/flink/flink-{{ flink_version }}/{{ flink_package_filename }}"
+flink_system_dependencies: "{{ _flink_system_dependencies }}"
+
+# Installation folder
+flink_root_dir:
+  path: "{{ flink_user.home | default('/var/lib/flink') }}"
+  user: "{{ flink_user.name }}"
+  group: "{{ flink_group.name }}"
+  mode: '0750'
+
+# Log folder
+flink_log_dir:
+  path: '/var/log/flink'
+  user: "{{ flink_user.name }}"
+  group: "{{ flink_group.name }}"
+  mode: '0750'
+
+# PID folder
+flink_pid_dir:
+  path: '/var/run/flink'
+  user: "{{ flink_user.name }}"
+  group: "{{ flink_group.name }}"
+  mode: '0750'
+
+# User management
+flink_group:
+  name: 'flink'
+flink_user:
+  name: 'flink'
+  home: '/var/lib/flink'
+
+
+# Service management
+#------------------------------------------------------------------------------
+
+flink_run_mode: 'local'
+
+flink_service_description: 'Apache Flink'
+flink_service_name: 'flink'
+flink_service_state: 'started'
+flink_service_enabled: True
+
+# Systemd
+flink_service_systemd:
+  restart: 'on-failure'
+  restart_sec: 1
+  wanted_by: 'multi-user.target'
+
+
+# Configuration
+#------------------------------------------------------------------------------
+
+flink_config: "{{ _flink_config }}"
+
+_flink_config:
+  jobmanager.heap.mb: 1024
+  jobmanager.rpc.address: 'localhost'
+  jobmanager.rpc.port: 6123
+  jobmanager.web.address: '0.0.0.0'
+  jobmanager.web.port: 8081
+  jobmanager.web.submit.enable: False
+  taskmanager.heap.mb: 1024
+  taskmanager.memory.preallocate: False
+  taskmanager.numberOfTaskSlots: 1
+  parallelism.default: 1
+
+flink_slaves: []
+```
+
+### Debian OS family variables
+
+``` yaml
+_flink_system_dependencies:
+  - name: 'unzip'
 ```
 
 ## Dependencies
