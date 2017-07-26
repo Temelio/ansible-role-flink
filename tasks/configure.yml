@@ -11,26 +11,14 @@
     mode: '0400'
   notify:
     - 'HANDLER | Restart flink'
-#
-#
-#- name: 'CONFIG | Manage flink-env.sh configuration file'
-#  template:
-#    src: "{{ role_path }}/templates/flink-env.sh.j2"
-#    dest: "{{ flink_root_dir.path }}/{{ flink_package }}/conf/flink-env.sh"
-#    owner: "{{ flink_user.name }}"
-#    group: "{{ flink_group.name }}"
-#    mode: '0500'
-#  notify:
-#    - 'HANDLER | Restart flink'
-#
-#
-#- name: 'CONFIG | Manage shiro.ini configuration file'
-#  template:
-#    src: "{{ role_path }}/templates/shiro.ini.j2"
-#    dest: "{{ flink_root_dir.path }}/{{ flink_package }}/conf/shiro.ini"
-#    owner: "{{ flink_user.name }}"
-#    group: "{{ flink_group.name }}"
-#    mode: '0400'
-#  notify:
-#    - 'HANDLER | Restart flink'
-#  when: "flink_shiro_enabled | bool"
+
+
+- name: 'CONFIG | Manage slaves configuration file'
+  template:
+    src: "{{ role_path }}/templates/etc/slaves.j2"
+    dest: "{{ flink_root_dir.path }}/{{ flink_package }}/conf/slaves"
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    mode: '0400'
+  notify:
+    - 'HANDLER | Restart flink'

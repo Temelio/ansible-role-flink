@@ -75,3 +75,5 @@ _flink_config:
   taskmanager.memory.preallocate: False
   taskmanager.numberOfTaskSlots: 1
   parallelism.default: 1
+
+flink_slaves: []
