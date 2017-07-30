@@ -41,6 +41,11 @@ flink_user:
   name: 'flink'
   home: '/var/lib/flink'
 
+flink_ssh_private_key: ''
+flink_ssh_public_key: ''
+flink_ssh_public_key_exclusive: True
+flink_do_ssh_copy_id: True
+
 
 # Service management
 #------------------------------------------------------------------------------
