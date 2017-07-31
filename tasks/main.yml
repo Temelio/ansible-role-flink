@@ -7,3 +7,46 @@
   tags:
     - 'role::flink'
     - 'role::flink::init'
+    - 'role::flink::config'
+    - 'role::flink::install'
+
+
+- name: 'INSTALL | Manage user and group'
+  become: True
+  include: "{{ role_path }}/tasks/manage_user.yml"
+  tags:
+    - 'role::flink'
+    - 'role::flink::install'
+
+
+- name: 'INSTALL | Manage SSH configuration'
+  become: True
+  include: "{{ role_path }}/tasks/manage_ssh.yml"
+  tags:
+    - 'role::flink'
+    - 'role::flink::install'
+
+
+- name: 'INSTALL | Manage package install'
+  become: True
+  include: "{{ role_path }}/tasks/install_package.yml"
+  tags:
+    - 'role::flink'
+    - 'role::flink::install'
+
+
+- name: 'CONFIG | Manage Flink configuration'
+  become: True
+  include: "{{ role_path }}/tasks/configure.yml"
+  tags:
+    - 'role::flink'
+    - 'role::flink::config'
+
+
+- name: 'SERVICE | Manage Flink service'
+  become: True
+  include: "{{ role_path }}/tasks/manage_service.yml"
+  tags:
+    - 'role::flink'
+    - 'role::flink::config'
+    - 'role::flink::install'

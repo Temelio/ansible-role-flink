@@ -17,7 +17,23 @@
 
 
 - hosts: 'all'
+  name: 'Manage SSH tests prerequisites'
+  tasks:
+    - name: 'PREREQUISITES | SSH | Generate a test SSH key'
+      command: 'ssh-keygen -f /tmp/flink_id_rsa -N ""'
+      args:
+        creates: '/tmp/flink_id_rsa'
+      become: False
+      changed_when: False
+      run_once: True
+      delegate_to: '127.0.0.1'
+
+
+- hosts: 'all'
   roles:
+    - role: 'infOpen.openjdk-jre'
     - role: "{{ role_name }}"
   vars:
     role_name: "{{ playbook_dir | basename }}"
+    flink_ssh_private_key: "{{ lookup('file', '/tmp/flink_id_rsa') }}"
+    flink_ssh_public_key: "{{ lookup('file', '/tmp/flink_id_rsa.pub') }}"

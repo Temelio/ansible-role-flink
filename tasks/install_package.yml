@@ -1,0 +1,70 @@
+---
+
+# Package installation management
+
+- name: 'INSTALL | Manage system dependencies'
+  package:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ flink_system_dependencies }}"
+
+
+- name: 'INSTALL | Ensure Flink root dir exists'
+  file:
+    path: "{{ flink_root_dir.path }}"
+    owner: "{{ flink_root_dir.user }}"
+    group: "{{ flink_root_dir.group }}"
+    mode: "{{ flink_root_dir.mode }}"
+    state: 'directory'
+
+
+- name: 'INSTALL | Ensure Flink log dir exists'
+  file:
+    path: "{{ flink_log_dir.path }}"
+    owner: "{{ flink_log_dir.user }}"
+    group: "{{ flink_log_dir.group }}"
+    mode: "{{ flink_log_dir.mode }}"
+    state: 'directory'
+
+
+- name: 'INSTALL | Ensure Flink pid dir exists'
+  file:
+    path: "{{ flink_pid_dir.path }}"
+    owner: "{{ flink_pid_dir.user }}"
+    group: "{{ flink_pid_dir.group }}"
+    mode: "{{ flink_pid_dir.mode }}"
+    state: 'directory'
+
+
+- name: 'INSTALL | Check if needed version is already installed'
+  stat:
+    path: "{{ flink_root_dir.path }}/{{ flink_package }}"
+  register: 'check_flink_install_path'
+
+
+- name: 'INSTALL | Download Flink package if needed'
+  get_url:
+    url: "{{ flink_download_url }}"
+    dest: '/tmp/'
+  when: "check_flink_install_path.stat.exists == False"
+
+
+- name: 'INSTALL | Extract Flink into the root directory'
+  unarchive:
+    src: "/tmp/{{ flink_package_filename }}"
+    dest: "{{ flink_root_dir.path }}/"
+    copy: no
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+  notify: 'HANDLER | Restart flink'
+  when: "check_flink_install_path.stat.exists == False"
+
+
+- name: 'INSTALL | Ensure current symlink targets the needed version'
+  file:
+    src: "{{ flink_root_dir.path }}/{{ flink_package }}"
+    dest: "{{ flink_root_dir.path }}/current"
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    state: 'link'
+  notify: 'HANDLER | Restart flink'
