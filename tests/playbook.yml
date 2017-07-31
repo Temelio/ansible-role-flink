@@ -25,6 +25,7 @@
         creates: '/tmp/flink_id_rsa'
       become: False
       changed_when: False
+      run_once: True
       delegate_to: '127.0.0.1'
 
 
