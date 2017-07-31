@@ -29,7 +29,7 @@ def test_user(host):
         'file', '/var/lib/flink/current/conf/flink-conf.yaml', 'flink',
         'flink', 0o400
     ),
-    ('file', '/var/lib/flink/current/conf/masters', 'flink', 'flink', 0o644),
+    ('file', '/var/lib/flink/current/conf/masters', 'flink', 'flink', 0o400),
     ('file', '/var/lib/flink/current/conf/slaves', 'flink', 'flink', 0o400),
 ])
 def test_files_and_folders(host, path_type, path, user, group, mode):
@@ -89,4 +89,6 @@ def test_socket(host):
     Ensure flink socket listening
     """
 
-    assert host.socket('tcp://0.0.0.0:8081').is_listening
+    assert host.socket('tcp://0.0.0.0:8081').is_listening \
+        or host.socket('tcp://:::8081').is_listening \
+        or host.socket('tcp://8081').is_listening
