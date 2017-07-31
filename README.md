@@ -126,6 +126,7 @@ _flink_config:
   taskmanager.numberOfTaskSlots: 1
   parallelism.default: 1
 
+flink_masters: []
 flink_slaves: []
 ```
 

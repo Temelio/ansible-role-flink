@@ -22,3 +22,14 @@
     mode: '0400'
   notify:
     - 'HANDLER | Restart flink'
+
+
+- name: 'CONFIG | Manage master configuration file'
+  template:
+    src: "{{ role_path }}/templates/etc/masters.j2"
+    dest: "{{ flink_root_dir.path }}/{{ flink_package }}/conf/masters"
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    mode: '0400'
+  notify:
+    - 'HANDLER | Restart flink'

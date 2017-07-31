@@ -1,0 +1,5 @@
+#{{ ansible_managed }}
+
+{% for master in flink_masters %}
+{{ master }}
+{% endfor %}
