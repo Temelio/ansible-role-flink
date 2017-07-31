@@ -89,7 +89,7 @@ flink_user:
 flink_ssh_private_key: ''
 flink_ssh_public_key: ''
 flink_ssh_public_key_exclusive: True
-flink_do_ssh_copy_id: True
+flink_manage_known_hosts: True
 
 
 # Service management

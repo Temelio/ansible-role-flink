@@ -16,24 +16,3 @@
     home: "{{ flink_user.home | default(omit) }}"
     system: "{{ flink_user.system | default(omit) }}"
     uid: "{{ flink_user.uid | default(omit) }}"
-
-
-- name: 'INSTALL | Manage SSH public key'
-  authorized_key:
-    exclusive: "{{ flink_ssh_public_key_exclusive }}"
-    key: "{{ flink_ssh_public_key }}"
-    user: "{{ flink_user.name }}"
-  when: "flink_ssh_public_key != ''"
-
-
-- name: 'INSTALL | Manage SSH private key'
-  copy:
-    content: "{{ flink_ssh_private_key }}"
-    dest: "{{ flink_user.home }}/.ssh/id_rsa"
-  when: "flink_ssh_private_key != ''"
-
-
-- name: 'INSTALL | Add slaves SSH host keys'
-  command: "ssh-copy-id {{ flink_user.name }}@{{ item }}"
-  with_items: "{{ flink_slaves }}"
-  when: "flink_do_ssh_copy_id"

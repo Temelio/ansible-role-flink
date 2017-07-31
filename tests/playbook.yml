@@ -20,7 +20,7 @@
   name: 'Manage SSH tests prerequisites'
   tasks:
     - name: 'PREREQUISITES | SSH | Generate a test SSH key'
-      shell: 'test -f /tmp/flink_id_rsa || ssh-keygen -f /tmp/flink_id_rsa -N ""'
+      shell: 'if [ ! -f "/tmp/flink_id_rsa" ]; then ssh-keygen -f /tmp/flink_id_rsa -N ""; fi'
       become: False
       changed_when: False
       delegate_to: '127.0.0.1'

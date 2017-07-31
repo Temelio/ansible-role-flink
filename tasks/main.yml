@@ -19,6 +19,14 @@
     - 'role::flink::install'
 
 
+- name: 'INSTALL | Manage SSH configuration'
+  become: True
+  include: "{{ role_path }}/tasks/manage_ssh.yml"
+  tags:
+    - 'role::flink'
+    - 'role::flink::install'
+
+
 - name: 'INSTALL | Manage package install'
   become: True
   include: "{{ role_path }}/tasks/install_package.yml"
