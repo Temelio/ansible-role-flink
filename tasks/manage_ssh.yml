@@ -1,0 +1,41 @@
+---
+
+# Manage SSH configuration
+
+- name: 'INSTALL | Manage SSH public key'
+  authorized_key:
+    exclusive: "{{ flink_ssh_public_key_exclusive }}"
+    key: "{{ flink_ssh_public_key }}"
+    user: "{{ flink_user.name }}"
+  when: "flink_ssh_public_key != ''"
+
+
+- name: 'INSTALL | Manage SSH private key'
+  copy:
+    content: "{{ flink_ssh_private_key }}"
+    dest: "{{ flink_user.home }}/.ssh/id_rsa"
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    mode: '0400'
+  when: "flink_ssh_private_key != ''"
+  notify:
+    - 'HANDLER | Restart flink'
+
+
+- name: 'INSTALL | Get slaves SSH host keys'
+  command: "ssh-keyscan {{ item }}"
+  register: 'flink_slaves_ssh_host_keys'
+  with_items: "{{ flink_slaves }}"
+  when: "flink_manage_known_hosts"
+
+
+- name: 'INSTALL | Add slaves SSH host keys'
+  template:
+    src: "{{ role_path }}/templates/known_hosts"
+    dest: "{{ flink_user.home }}/.ssh/known_hosts"
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    mode: '0644'
+  when: "flink_manage_known_hosts"
+  notify:
+    - 'HANDLER | Restart flink'

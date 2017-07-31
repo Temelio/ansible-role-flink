@@ -1,0 +1,39 @@
+---
+
+# Role tests
+
+- hosts: 'flink-vagrant-xenial64:flink-docker-xenial'
+  name: 'Install tests prerequisites'
+  gather_facts: False
+  tasks:
+    - name: 'PREREQUISITES | APT | Do an apt-get update'
+      become: True
+      raw: 'apt-get update -qq'
+      changed_when: False
+    - name: 'PREREQUISITES | APT | Install python 2.7'
+      become: True
+      raw: 'apt-get install -qq python2.7'
+      changed_when: False
+
+
+- hosts: 'all'
+  name: 'Manage SSH tests prerequisites'
+  tasks:
+    - name: 'PREREQUISITES | SSH | Generate a test SSH key'
+      command: 'ssh-keygen -f /tmp/flink_id_rsa -N ""'
+      args:
+        creates: '/tmp/flink_id_rsa'
+      become: False
+      changed_when: False
+      run_once: True
+      delegate_to: '127.0.0.1'
+
+
+- hosts: 'all'
+  roles:
+    - role: 'infOpen.openjdk-jre'
+    - role: "{{ role_name }}"
+  vars:
+    role_name: "{{ playbook_dir | basename }}"
+    flink_ssh_private_key: "{{ lookup('file', '/tmp/flink_id_rsa') }}"
+    flink_ssh_public_key: "{{ lookup('file', '/tmp/flink_id_rsa.pub') }}"

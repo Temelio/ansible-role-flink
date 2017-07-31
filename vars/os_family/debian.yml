@@ -1,0 +1,6 @@
+---
+
+# Debian OS family specific vars
+
+_flink_system_dependencies:
+  - name: 'unzip'

@@ -1,0 +1,37 @@
+---
+
+# Flink service management
+
+- name: 'SERVICE | INIT.D | Manage service configuration file'
+  template:
+    src: "{{ role_path }}/templates/services/init.d.j2"
+    dest: '/etc/init.d/flink'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  register: 'check_flink_service_initd_managed'
+  notify:
+    - 'HANDLER | Restart flink'
+  when:
+    - "ansible_distribution_version in [8,'14.04']"
+
+
+- name: 'SERVICE | SYSTEMD | Manage service configuration file'
+  template:
+    src: "{{ role_path }}/templates/services/systemd.j2"
+    dest: '/etc/systemd/system/flink.service'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'HANDLER | Restart flink'
+  when:
+    - "check_flink_service_initd_managed | skipped"
+
+- name: 'SERVICE | Manage service state'
+  service:
+    name: "{{ flink_service_name }}"
+    state: "{{ flink_service_state }}"
+    enabled: "{{ flink_service_enabled }}"
+  notify:
+    - 'HANDLER | Restart flink'

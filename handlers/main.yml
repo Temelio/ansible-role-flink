@@ -1,0 +1,14 @@
+---
+
+# Handlers main file for flink role
+
+- name: 'HANDLER | Restart flink'
+  become: True
+  service:
+    name: "{{ flink_service_name }}"
+    state: 'restarted'
+  when: "flink_service_state != 'stopped'"
+  tags:
+    - 'role::flink'
+    - 'role::flink::config'
+    - 'role::flink::install'

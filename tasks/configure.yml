@@ -1,0 +1,35 @@
+---
+
+# Flink configuration tasks
+
+- name: 'CONFIG | Manage flink-conf.yaml configuration file'
+  template:
+    src: "{{ role_path }}/templates/etc/flink-conf.yaml.j2"
+    dest: "{{ flink_root_dir.path }}/{{ flink_package }}/conf/flink-conf.yaml"
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    mode: '0400'
+  notify:
+    - 'HANDLER | Restart flink'
+
+
+- name: 'CONFIG | Manage slaves configuration file'
+  template:
+    src: "{{ role_path }}/templates/etc/slaves.j2"
+    dest: "{{ flink_root_dir.path }}/{{ flink_package }}/conf/slaves"
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    mode: '0400'
+  notify:
+    - 'HANDLER | Restart flink'
+
+
+- name: 'CONFIG | Manage master configuration file'
+  template:
+    src: "{{ role_path }}/templates/etc/masters.j2"
+    dest: "{{ flink_root_dir.path }}/{{ flink_package }}/conf/masters"
+    owner: "{{ flink_user.name }}"
+    group: "{{ flink_group.name }}"
+    mode: '0400'
+  notify:
+    - 'HANDLER | Restart flink'
