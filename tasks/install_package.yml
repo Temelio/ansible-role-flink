@@ -38,7 +38,7 @@
 
 - name: 'INSTALL | Check if needed version is already installed'
   stat:
-    path: "{{ flink_root_dir.path }}/{{ flink_package }}"
+    path: "{{ flink_root_dir.path }}/{{ (flink_package_filename | splitext)[0] }}"
   register: 'check_flink_install_path'
 
 
@@ -60,9 +60,14 @@
   when: "check_flink_install_path.stat.exists == False"
 
 
+- name: 'INSTALL | Rename folder to have hadoop and scala version'
+  command: "mv {{ flink_root_dir.path }}/{{ flink_package }} {{ flink_root_dir.path }}/{{ (flink_package_filename | splitext)[0] }}"
+  when: "check_flink_install_path.stat.exists == False"
+
+
 - name: 'INSTALL | Ensure current symlink targets the needed version'
   file:
-    src: "{{ flink_root_dir.path }}/{{ flink_package }}"
+    src: "{{ flink_root_dir.path }}/{{ (flink_package_filename | splitext)[0] }}"
     dest: "{{ flink_root_dir.path }}/current"
     owner: "{{ flink_user.name }}"
     group: "{{ flink_group.name }}"
