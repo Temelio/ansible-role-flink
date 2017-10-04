@@ -128,6 +128,7 @@ _flink_config:
 
 flink_masters: []
 flink_slaves: []
+flink_additional_libs: []
 ```
 
 ### Debian OS family variables

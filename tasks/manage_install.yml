@@ -65,6 +65,16 @@
   when: "check_flink_install_path.stat.exists == False"
 
 
+- name: 'INSTALL | Download additional libs'
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest | default((flink_package_filename | splitext)[0] ~ '/lib') }}"
+    owner: "{{ item.owner | default(flink_user.name) }}"
+    group: "{{ item.group | default(flink_group.name) }}"
+    mode: "{{ item.mode | default('0644') }}"
+  with_items: "{{ flink_additional_libs }}"
+
+
 - name: 'INSTALL | Ensure current symlink targets the needed version'
   file:
     src: "{{ flink_root_dir.path }}/{{ (flink_package_filename | splitext)[0] }}"
