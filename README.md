@@ -1,6 +1,10 @@
 # flink
 
-[![Build Status](https://travis-ci.org/Temelio/ansible-role-flink.svg?branch=master)](https://travis-ci.org/Temelio/ansible-role-flink)
+[![Build Status](https://img.shields.io/travis/Temelio/ansible-role-flink/master.svg?label=travis_master)](https://travis-ci.org/Temelio/ansible-role-flink)
+[![Build Status](https://img.shields.io/travis/Temelio/ansible-role-flink/develop.svg?label=travis_develop)](https://travis-ci.org/Temelio/ansible-role-flink)
+[![Updates](https://pyup.io/repos/github/Temelio/ansible-role-flink/shield.svg)](https://pyup.io/repos/github/Temelio/ansible-role-flink/)
+[![Python 3](https://pyup.io/repos/github/Temelio/ansible-role-flink/python-3-shield.svg)](https://pyup.io/repos/github/Temelio/ansible-role-flink/)
+[![Ansible Role](https://img.shields.io/ansible/role/19271.svg)](https://galaxy.ansible.com/Temelio/flink/)
 
 Install flink package.
 
